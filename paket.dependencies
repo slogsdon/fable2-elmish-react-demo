@@ -1,9 +1,9 @@
 source https://nuget.org/api/v2
 storage:none
 
-clitool dotnet-fable
-nuget Fable.Core
-nuget Fable.Elmish.Browser
+clitool dotnet-fable prerelease
+nuget Fable.Core prerelease
+nuget Fable.Elmish.Browser prerelease
 nuget Fable.Elmish.HMR
-nuget Fable.Elmish.React
+nuget Fable.Elmish.React prerelease
 nuget Fable.Import.Browser

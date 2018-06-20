@@ -1,4 +1,24 @@
-# Fable Simple Template
+# Fable Elmish demo
+
+This demo started as the "Simple App" template exposed by Fable, which is available as:
+
+```
+dotnet new -i Fable.Template
+dotnet new fable -lang F#
+```
+
+with some reconfigurations:
+
+- Upgrade to Fable 2 alpha
+- Move `dotnet-fable` CLI tool from `tools` project to the main project in `src`
+- Remove `tools` project
+- Upgrade `webpack` to v4
+- Replace `webpack-serve` instead of `webpack-dev-server`
+- Add Elmish with its Navigation package and React
+- Add some `webpack` plugins to aid production builds
+- Added MIT license
+
+> **Original README contents below**
 
 This template can be used to generate a simple web app with [Fable](http://fable.io/).
 You can find more templates by searching `Fable.Template` packages in [Nuget](https://www.nuget.org).

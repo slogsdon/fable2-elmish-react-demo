@@ -7,14 +7,14 @@ open Elmish.HMR
 open Elmish.React
 open Fable.Helpers.React.Props
 module R = Fable.Helpers.React
+open Fable.Import.Browser
 
 // Let's define our model
 
 type IRoute =
   | Home
   | About
-  | Blog of int
-  | Search of string
+  | NotFound
 
 type Model =
   { count: int
@@ -29,43 +29,36 @@ let routes =
   oneOf
         [ map Home (s "")
           map About (s "about")
-          map Blog (s "blog" </> i32)
-          map Search (s "search" </> str) ]
-
-let urlUpdate (result: IRoute option) model =
-  Fable.Import.Browser.console.log("location", Fable.Import.Browser.location)
-  Fable.Import.Browser.console.log("result", result)
-  match result with
-  | Some page ->
-      { model with route = page }, Cmd.none
-
-  | None ->
-      ( model, Navigation.newUrl "/" ) // no matching route - go home
+          map NotFound (s "404") ]
 
 let urlOfRoute route =
   match route with
   | Home -> "/"
   | About -> "/about"
-  | _ -> "/"
+  | NotFound -> "/404"
+
+let getProperRoute (location: IRoute option) =
+  match location with
+  | Some r -> Some r
+  | None ->
+    match (parsePath routes window.location) with
+    | Some r -> Some r
+    | None -> None
+
+let urlUpdate (result: IRoute option) model =
+  match getProperRoute result with
+  | Some page ->
+      { model with route = page }, Cmd.none
+
+  | None ->
+      ( model, Navigation.newUrl "/404" ) // no matching route - go home
 
 // Handle our state initialization and updates
 
 let init (location: IRoute option) =
-  Fable.Import.Browser.console.log("init location", location)
-  Fable.Import.Browser.console.log("init window.location", Fable.Import.Browser.location)
+  urlUpdate location { count = 0; route = Home }
 
-  // let route =
-  //   match location with
-  //   | Some r -> r
-  //   | None ->
-  //     match (parsePath routes Fable.Import.Browser.location) with
-  //     | Some r -> r
-  //     | None -> Home
-
-  { count = 0
-    route = Home }, Cmd.none
-
-let update (msg: Msg) model =
+let update model (msg: Msg) =
   match msg with
   | FollowLink route -> { model with route = route }, (Navigation.newUrl <| urlOfRoute route)
 
@@ -77,7 +70,7 @@ let link dispatch (route: IRoute) (text: string) =
       Href <| urlOfRoute route ]
     [ R.str text ]
 
-let view model dispatch =
+let view dispatch model =
   R.fragment []
       [ R.nav []
           [ link dispatch Home "Home"
@@ -85,8 +78,8 @@ let view model dispatch =
 
         (match model.route with
          | Home -> R.div [] [ R.str "Home" ]
-         | About -> R.div [] [ R.str "Home" ]
-         | _ -> R.div [] [ R.str "Not Found" ])
+         | About -> R.div [] [ R.str "About" ]
+         | NotFound -> R.div [] [ R.str "Not Found" ])
       ]
 
 // Create the program instance

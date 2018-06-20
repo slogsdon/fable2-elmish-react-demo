@@ -5,8 +5,8 @@
   },
   "scripts": {
     "postinstall": "dotnet restore",
-    "build": "cd src && dotnet fable yarn-run webpack -- -p --config config/webpack.prod.js",
-    "start": "cd src && dotnet fable yarn-run webpack-serve -- --config config/webpack.dev.js",
+    "build": "cd src && dotnet fable webpack -- -p --config config/webpack.prod.js",
+    "start": "cd src && dotnet fable webpack-serve -- --config config/webpack.dev.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
